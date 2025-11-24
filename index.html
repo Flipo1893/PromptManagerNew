@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptManager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>PromptManager</h1>
+    <div class="hamburger-menu">
+      <button id="hamburgerBtn" class="hamburger-btn">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div id="menuDropdown" class="menu-dropdown">
+        <div class="menu-label">Bereiche</div>
+        <div class="menu-item" data-section="create">Neuer Prompt</div>
+
+        <div class="menu-label" style="margin-top: 8px;">KI-Modelle</div>
+        <div class="menu-item" data-ai="all">Alle anzeigen <span class="ai-badge" id="countAll">0</span></div>
+        <div class="menu-item" data-ai="ChatGPT">ChatGPT <span class="ai-badge" id="countChatGPT">0</span></div>
+        <div class="menu-item" data-ai="Claude.AI">Claude.AI <span class="ai-badge" id="countClaudeAI">0</span></div>
+        <div class="menu-item" data-ai="DeepSeek">DeepSeek <span class="ai-badge" id="countDeepSeek">0</span></div>
+        <div class="menu-item" data-ai="Perplexity">Perplexity <span class="ai-badge" id="countPerplexity">0</span></div>
+        <div class="menu-item" data-ai="Gemini">Gemini <span class="ai-badge" id="countGemini">0</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="section-create" class="section active">
+      <div class="create-container">
+        <h2>Neuen Prompt erstellen</h2>
+        <form id="promptForm">
+          <label>KI-Modell</label>
+          <select id="promptAI" required>
+            <option value="">Bitte auswählen</option>
+            <option value="ChatGPT">ChatGPT</option>
+            <option value="Claude.AI">Claude.AI</option>
+            <option value="DeepSeek">DeepSeek</option>
+            <option value="Perplexity">Perplexity</option>
+            <option value="Gemini">Gemini</option>
+          </select>
+
+          <label>Titel</label>
+          <input type="text" id="promptTitle" placeholder="Titel des Prompts" required />
+
+          <label>Kategorie</label>
+          <select id="promptCategory" required>
+            <option value="">Kategorie auswählen</option>
+            <option value="Schreiben">Schreiben</option>
+            <option value="Coding">Coding</option>
+            <option value="Analyse">Analyse</option>
+            <option value="Kreativ">Kreativ</option>
+            <option value="Business">Business</option>
+            <option value="Sonstiges">Sonstiges</option>
+          </select>
+
+          <label>Prompt-Text</label>
+          <textarea id="promptText" rows="6" placeholder="Hier deinen Prompt eingeben..." required></textarea>
+
+          <button type="submit" class="btn-primary">Speichern</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="section-list" class="section">
+      <div class="list-container">
+        <h2>Gespeicherte Prompts</h2>
+        <div id="filterInfo" class="filter-info" style="display: none;">
+          <div class="filter-group">
+            <span>Filter: <strong id="filterName">Alle</strong></span>
+            <button class="btn-clear" id="clearFilter">Filter entfernen</button>
+          </div>
+        </div>
+        <div id="promptsList" class="prompts-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
