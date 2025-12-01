@@ -8,7 +8,6 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
-
   adminer:
     image: adminer:5.4.1
     ports:
@@ -16,7 +15,11 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: "mysql"
       ADMINER_DESIGN: "pepa-linha"
-
-
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"    
 volumes:
   mysql_data:
