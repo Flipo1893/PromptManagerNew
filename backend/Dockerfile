@@ -1,16 +1,9 @@
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
-RUN ./mvnw dependency:go-offline
+COPY target/promptmanager-0.0.1-SNAPSHOT.jar app.jar
 
-COPY src src
+EXPOSE 8082
 
-RUN ./mvnw clean package -DskipTests
-
-EXPOSE 8081
-
-CMD ["java", "-jar", "target/*.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
