@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_URL = "http://localhost:8081/api/prompts";
+    const API_URL = "http://localhost:8082/api/prompts";
 
     let allPrompts = [];
     let currentFilter = "all";
