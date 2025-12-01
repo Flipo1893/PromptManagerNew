@@ -1,0 +1,9 @@
+FROM node:22-alpine AS dev
+
+WORKDIR /app
+
+RUN npm install -g http-server
+
+EXPOSE 5173
+
+CMD ["http-server", ".", "-p", "5173", "-c-1"]
