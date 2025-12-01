@@ -2,12 +2,15 @@
 POST http://localhost:8081/api/prompts
 Content-Type: application/json
 
+
 {
-  "aiModel": "gpt-4",
-  "title": "Test Prompt",
-  "category": "general",
-  "text": "Hello world from IntelliJ"
+  "title": "Test",
+  "category": "TestCat",
+  "text": "Das ist ein Test",
+  "aiModel": "ChatGPT"
 }
+
+
 
 ### Get all prompts
 GET http://localhost:8081/api/prompts
