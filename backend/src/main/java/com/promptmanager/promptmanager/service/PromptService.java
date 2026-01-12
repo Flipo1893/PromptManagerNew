@@ -19,7 +19,7 @@ public class PromptService {
     }
 
     public Prompt save(Prompt p) {
-        Integer score = analyzer.analyze(p);
+        int score = analyzer.analyze(p);
         p.setScore(score);
         return repo.save(p);
     }

@@ -145,6 +145,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="prompt-text">${p.text}</div>
           </div>
           <div class="prompt-actions">
+          <span class="prompt-score" style="color:#94a3b8;font-size:0.85em;align-self:center;margin-right:8px;">
+             Score: ${p.score ?? 0}
+             </span>
             <button class="btn-copy" onclick="copyPrompt('${encodeURIComponent(
                             p.text
                         )}')">Kopieren</button>

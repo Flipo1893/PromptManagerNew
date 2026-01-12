@@ -9,21 +9,13 @@ public class Prompt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String aiModel;
     private String title;
     private String category;
+    private int score;
 
     @Column(columnDefinition = "TEXT")
     private String text;
-
-
-    private Integer value;
-
-
-    public Prompt() {
-    }
-
 
     public Long getId() {
         return id;
@@ -65,11 +57,11 @@ public class Prompt {
         this.text = text;
     }
 
-    public Integer getScore() {
-        return value;
+    public int getScore() {
+        return score;
     }
 
-    public void setScore(Integer score) {
-        this.value = score;
+    public void setScore(int score) {
+        this.score = score;
     }
 }
