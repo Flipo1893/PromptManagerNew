@@ -1,8 +1,11 @@
 package com.promptmanager.promptmanager.entity;
+
 import jakarta.persistence.*;
+
 @Entity
 @Table(name = "prompts")
 public class Prompt {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,8 +17,20 @@ public class Prompt {
     @Column(columnDefinition = "TEXT")
     private String text;
 
+
+    private Integer value;
+
+
+    public Prompt() {
+    }
+
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAiModel() {
@@ -48,5 +63,13 @@ public class Prompt {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Integer getScore() {
+        return value;
+    }
+
+    public void setScore(Integer score) {
+        this.value = score;
     }
 }
