@@ -1,5 +1,6 @@
 package com.promptmanager.promptmanager.service;
 
+import com.promptmanager.promptmanager.analyzer.PromptAnalyzer;
 import com.promptmanager.promptmanager.entity.Prompt;
 import com.promptmanager.promptmanager.repository.PromptRepository;
 import org.springframework.stereotype.Service;
@@ -10,12 +11,16 @@ import java.util.List;
 public class PromptService {
 
     private final PromptRepository repo;
+    private final PromptAnalyzer analyzer;
 
-    public PromptService(PromptRepository repo) {
+    public PromptService(PromptRepository repo,PromptAnalyzer analyzer) {
         this.repo = repo;
+        this.analyzer = analyzer;
     }
 
     public Prompt save(Prompt p) {
+        Integer score = analyzer.analyze(p);
+        p.setScore(score);
         return repo.save(p);
     }
 
