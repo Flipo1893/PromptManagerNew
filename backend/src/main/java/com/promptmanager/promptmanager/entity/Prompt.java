@@ -1,9 +1,13 @@
+// language: java
 package com.promptmanager.promptmanager.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "prompts")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Prompt {
 
     @Id
@@ -12,8 +16,8 @@ public class Prompt {
     private String aiModel;
     private String title;
     private String category;
+    @Column(name = "score")
     private int score;
-
     @Column(columnDefinition = "TEXT")
     private String text;
 
@@ -57,6 +61,7 @@ public class Prompt {
         this.text = text;
     }
 
+    @JsonProperty("score")
     public int getScore() {
         return score;
     }

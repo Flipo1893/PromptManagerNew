@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function savePromptBackend(prompt) {
         await fetch(API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify(prompt)
         });
 
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function deletePromptBackend(id) {
-        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        await fetch(`${API_URL}/${id}`, {method: "DELETE"});
         loadPrompts();
     }
 
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
             title: document.getElementById("promptTitle").value,
             category: document.getElementById("promptCategory").value,
             text: document.getElementById("promptText").value,
-            aiModel: document.getElementById("promptAI").value
+            aiModel: document.getElementById("promptAI").value,
         };
 
         savePromptBackend(newPrompt);

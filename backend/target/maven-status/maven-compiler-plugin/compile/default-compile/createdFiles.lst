@@ -1,5 +1,0 @@
-com\promptmanager\promptmanager\PromptmanagerApplication.class
-com\promptmanager\promptmanager\service\PromptService.class
-com\promptmanager\promptmanager\controller\PromptController.class
-com\promptmanager\promptmanager\entity\Prompt.class
-com\promptmanager\promptmanager\repository\PromptRepository.class
