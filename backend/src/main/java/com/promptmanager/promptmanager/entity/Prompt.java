@@ -16,8 +16,7 @@ public class Prompt {
     private String aiModel;
     private String title;
     private String category;
-    @Column(name = "score")
-    private int score;
+    private Integer score;
     @Column(columnDefinition = "TEXT")
     private String text;
 
