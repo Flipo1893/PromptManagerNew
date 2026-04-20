@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
     const API_URL = "http://localhost:8082/api/prompts";
-
     let allPrompts = [];
     let currentFilter = "all";
+
+    function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 2200);
+    }
 
     async function loadPrompts() {
         const res = await fetch(API_URL);
@@ -11,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCounts();
     }
 
-    async function loadPromptsByModel(model) {
+    async function loadByModel(model) {
         const res = await fetch(`${API_URL}/${model}`);
         allPrompts = await res.json();
         currentFilter = model;
@@ -19,159 +25,145 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCounts();
     }
 
-    async function savePromptBackend(prompt) {
+    async function savePrompt(prompt) {
         await fetch(API_URL, {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(prompt)
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(prompt),
         });
-
-        loadPrompts(); // reload UI
-    }
-
-    async function deletePromptBackend(id) {
-        await fetch(`${API_URL}/${id}`, {method: "DELETE"});
         loadPrompts();
     }
 
-    // -------------------------
-    // UI Elemente
-    // -------------------------
-    const hamburgerBtn = document.getElementById("hamburgerBtn");
-    const menuDropdown = document.getElementById("menuDropdown");
-    const createSection = document.getElementById("section-create");
-    const listSection = document.getElementById("section-list");
-    const form = document.getElementById("promptForm");
-    const promptsList = document.getElementById("promptsList");
-    const filterInfo = document.getElementById("filterInfo");
-    const clearFilterBtn = document.getElementById("clearFilter");
+    async function deletePromptBackend(id) {
+        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        loadPrompts();
+    }
 
-    // Hamburger Menü
-    hamburgerBtn.addEventListener("click", e => {
+    // ── DOM refs ──
+    const hamburgerBtn  = document.getElementById("hamburgerBtn");
+    const menuDropdown  = document.getElementById("menuDropdown");
+    const createSection = document.getElementById("section-create");
+    const listSection   = document.getElementById("section-list");
+    const form          = document.getElementById("promptForm");
+    const promptsList   = document.getElementById("promptsList");
+    const filterInfo    = document.getElementById("filterInfo");
+
+    hamburgerBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         hamburgerBtn.classList.toggle("active");
         menuDropdown.classList.toggle("active");
     });
 
-    document.addEventListener("click", e => {
+    document.addEventListener("click", (e) => {
         if (!hamburgerBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
             hamburgerBtn.classList.remove("active");
             menuDropdown.classList.remove("active");
         }
     });
 
-    // Menü: Neuer Prompt
-    document.querySelectorAll('.menu-item[data-section="create"]').forEach(item => {
-        item.addEventListener("click", () => {
+    document.querySelectorAll('.menu-item[data-section="create"]').forEach((el) =>
+        el.addEventListener("click", () => {
             listSection.classList.remove("active");
             createSection.classList.add("active");
             hamburgerBtn.classList.remove("active");
             menuDropdown.classList.remove("active");
-        });
-    });
+        })
+    );
 
-    // KI Filter
-    document.querySelectorAll(".menu-item[data-ai]").forEach(item => {
-        item.addEventListener("click", () => {
-            const model = item.dataset.ai;
+    document.querySelectorAll(".menu-item[data-ai]").forEach((el) =>
+        el.addEventListener("click", () => {
+            const model = el.dataset.ai;
             if (model === "all") {
                 currentFilter = "all";
                 loadPrompts();
             } else {
-                loadPromptsByModel(model);
+                loadByModel(model);
             }
-
             createSection.classList.remove("active");
             listSection.classList.add("active");
             hamburgerBtn.classList.remove("active");
             menuDropdown.classList.remove("active");
-        });
-    });
+        })
+    );
 
-    // Filter entfernen
-    clearFilterBtn.addEventListener("click", () => {
+    document.getElementById("clearFilter").addEventListener("click", () => {
         currentFilter = "all";
         loadPrompts();
     });
 
-    // Prompt Formular
-    form.addEventListener("submit", e => {
+    form.addEventListener("submit", (e) => {
         e.preventDefault();
-
-        const newPrompt = {
-            title: document.getElementById("promptTitle").value,
+        savePrompt({
+            title:    document.getElementById("promptTitle").value,
             category: document.getElementById("promptCategory").value,
-            text: document.getElementById("promptText").value,
-            aiModel: document.getElementById("promptAI").value,
-        };
-
-        savePromptBackend(newPrompt);
+            text:     document.getElementById("promptText").value,
+            aiModel:  document.getElementById("promptAI").value,
+        });
         form.reset();
-        alert("✅ Prompt gespeichert!");
+        showToast("✓ Prompt gespeichert");
     });
 
-    // Prompt löschen
-    window.deletePrompt = function (id) {
+    window.deletePrompt = (id) => {
         deletePromptBackend(id);
+        showToast("Prompt gelöscht");
     };
 
-    // Prompt kopieren
-    window.copyPrompt = function (text) {
-        const decoded = decodeURIComponent(text);
-        navigator.clipboard.writeText(decoded);
-        alert("📋 Prompt kopiert!");
+    window.copyPrompt = (text) => {
+        navigator.clipboard.writeText(decodeURIComponent(text));
+        showToast("📋 Kopiert");
     };
 
-    // Rendern
     function render() {
         const list =
             currentFilter === "all"
                 ? allPrompts
-                : allPrompts.filter(p => p.aiModel === currentFilter);
+                : allPrompts.filter((p) => p.aiModel === currentFilter);
 
-        filterInfo.style.display = currentFilter === "all" ? "none" : "flex";
+        filterInfo.classList.toggle("visible", currentFilter !== "all");
         document.getElementById("filterName").textContent = currentFilter;
 
-        promptsList.innerHTML =
-            list.length === 0
-                ? `<p style="text-align:center;color:#64748b;">Keine Prompts gefunden.</p>`
-                : list
-                    .map(
-                        p => `
-        <div class="prompt-item">
-          <div>
-            <div class="prompt-title">${p.title}</div>
-            <div class="prompt-meta">${p.aiModel} | ${p.category}</div>
-            <div class="prompt-text">${p.text}</div>
-          </div>
+        if (list.length === 0) {
+            promptsList.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">◈</div>
+          <p>Keine Prompts gefunden.</p>
+        </div>`;
+            return;
+        }
+
+        promptsList.innerHTML = list
+            .map(
+                (p) => `
+      <div class="prompt-item">
+        <div class="prompt-title">${p.title}</div>
+        <div class="prompt-meta">
+          <span class="tag model">${p.aiModel}</span>
+          <span class="tag">${p.category}</span>
+        </div>
+        <div class="prompt-text">${p.text}</div>
+        <div class="prompt-footer">
+          <div class="score-badge"><span class="dot"></span> Score: ${p.score ?? 0}</div>
           <div class="prompt-actions">
-          <span class="prompt-score" style="color:#94a3b8;font-size:0.85em;align-self:center;margin-right:8px;">
-             Score: ${p.score ?? 0}
-             </span>
-            <button class="btn-copy" onclick="copyPrompt('${encodeURIComponent(
-                            p.text
-                        )}')">Kopieren</button>
+            <button class="btn-copy" onclick="copyPrompt('${encodeURIComponent(p.text)}')">Kopieren</button>
             <button class="btn-delete" onclick="deletePrompt(${p.id})">Löschen</button>
           </div>
-        </div>`
-                    )
-                    .join("");
+        </div>
+      </div>`
+            )
+            .join("");
     }
 
-    // Counter aktualisieren
     function updateCounts() {
-        ["all", "ChatGPT", "Claude.AI", "DeepSeek", "Perplexity", "Gemini"].forEach(ai => {
+        ["all", "ChatGPT", "Claude.AI", "DeepSeek", "Perplexity", "Gemini"].forEach((ai) => {
             const el = document.getElementById(`count${ai.replace(".", "")}`);
             if (!el) return;
-
-            if (ai === "all") {
-                el.textContent = allPrompts.length;
-            } else {
-                el.textContent = allPrompts.filter(p => p.aiModel === ai).length;
-            }
+            el.textContent =
+                ai === "all"
+                    ? allPrompts.length
+                    : allPrompts.filter((p) => p.aiModel === ai).length;
         });
     }
 
-    loadPrompts(); // Start
+    loadPrompts();
     createSection.classList.add("active");
 });
