@@ -1,6 +1,7 @@
 package com.promptmanager.promptmanager.analyzer;
 
 import com.promptmanager.promptmanager.entity.Prompt;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,6 +11,7 @@ public class PromptAnalyzer {
 
     private final List<Criterion> criteria;
 
+    @Autowired
     public PromptAnalyzer(List<Criterion> criteria) {
         this.criteria = criteria;
         System.out.println("CRITERIA COUNT = " + criteria.size());
