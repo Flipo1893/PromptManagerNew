@@ -1,10 +1,14 @@
 package com.promptmanager.promptmanager.criteria;
 
-import com.promptmanager.promptmanager.analyzer.Criterion;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LengthCriterium implements Criterion {
+public class LengthCriterium extends AbstractCriterium {
+
+
+    public LengthCriterium() {
+        super("length");
+    }
 
     @Override
     public int evaluate(String text) {

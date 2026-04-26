@@ -1,10 +1,13 @@
 package com.promptmanager.promptmanager.criteria;
 
-import com.promptmanager.promptmanager.analyzer.Criterion;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RoleCriterion implements Criterion {
+public class RoleCriterion extends AbstractCriterium {
+
+    public RoleCriterion() {
+        super("role");
+    }
 
     @Override
     public int evaluate(String text) {
@@ -14,9 +17,9 @@ public class RoleCriterion implements Criterion {
 
         String lowerText = text.toLowerCase();
 
-        // typische Rollen-Formulierungen
-        if (lowerText.contains("du bist ein") ||
-                lowerText.contains("du bist eine") ||
+
+        if (lowerText.contains("du bist eine") ||
+                lowerText.contains("du bist ein") ||
                 lowerText.contains("ich gebe dir die rolle") ||
                 lowerText.contains("handle als") ||
                 lowerText.contains("act as")) {

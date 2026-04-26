@@ -14,7 +14,6 @@ public class PromptAnalyzer {
     @Autowired
     public PromptAnalyzer(List<Criterion> criteria) {
         this.criteria = criteria;
-        System.out.println("CRITERIA COUNT = " + criteria.size());
     }
 
     public Integer analyze(Prompt prompt) {

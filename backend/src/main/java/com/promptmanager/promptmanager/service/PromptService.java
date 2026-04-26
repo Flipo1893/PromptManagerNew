@@ -10,10 +10,10 @@ import java.util.List;
 @Service
 public class PromptService {
 
-    private final PromptRepository repo;
+    private final PromptRepository repo; //Aggregation Lebt ohne Besitzer
     private final PromptAnalyzer analyzer;
 
-    public PromptService(PromptRepository repo,PromptAnalyzer analyzer) {
+    public PromptService(PromptRepository repo, PromptAnalyzer analyzer) {
         this.repo = repo;
         this.analyzer = analyzer;
     }
