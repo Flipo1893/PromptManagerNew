@@ -1,91 +1,94 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PromptManager</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>PromptManager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@500;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
 <div class="toast" id="toast"></div>
 
 <header>
-  <div class="logo">
-    <div class="logo-icon">PM</div>
-    <h1>PromptManager</h1>
-  </div>
-
-  <div class="hamburger-menu">
-    <button id="hamburgerBtn" class="hamburger-btn">
-      <span></span><span></span><span></span>
-    </button>
-
-    <div id="menuDropdown" class="menu-dropdown">
-      <div class="menu-label">Bereiche</div>
-      <div class="menu-item" data-section="create">Neuer Prompt</div>
-      <div class="menu-divider"></div>
-      <div class="menu-label">KI-Modelle</div>
-      <div class="menu-item" data-ai="all">Alle <span class="ai-badge" id="countAll">0</span></div>
-      <div class="menu-item" data-ai="ChatGPT">ChatGPT <span class="ai-badge" id="countChatGPT">0</span></div>
-      <div class="menu-item" data-ai="Claude.AI">Claude.AI <span class="ai-badge" id="countClaudeAI">0</span></div>
-      <div class="menu-item" data-ai="DeepSeek">DeepSeek <span class="ai-badge" id="countDeepSeek">0</span></div>
-      <div class="menu-item" data-ai="Perplexity">Perplexity <span class="ai-badge" id="countPerplexity">0</span></div>
-      <div class="menu-item" data-ai="Gemini">Gemini <span class="ai-badge" id="countGemini">0</span></div>
+    <div class="logo">
+        <div class="logo-icon">PM</div>
+        <h1>PromptManager</h1>
     </div>
-  </div>
+
+    <div class="hamburger-menu">
+        <button id="hamburgerBtn" class="hamburger-btn">
+            <span></span><span></span><span></span>
+        </button>
+
+        <div id="menuDropdown" class="menu-dropdown">
+            <div class="menu-label">Bereiche</div>
+            <div class="menu-item" data-section="create">Neuer Prompt</div>
+            <div class="menu-divider"></div>
+            <div class="menu-label">KI-Modelle</div>
+            <div class="menu-item" data-ai="all">Alle <span class="ai-badge" id="countAll">0</span></div>
+            <div class="menu-item" data-ai="ChatGPT">ChatGPT <span class="ai-badge" id="countChatGPT">0</span></div>
+            <div class="menu-item" data-ai="Claude.AI">Claude.AI <span class="ai-badge" id="countClaudeAI">0</span>
+            </div>
+            <div class="menu-item" data-ai="DeepSeek">DeepSeek <span class="ai-badge" id="countDeepSeek">0</span></div>
+            <div class="menu-item" data-ai="Perplexity">Perplexity <span class="ai-badge" id="countPerplexity">0</span>
+            </div>
+            <div class="menu-item" data-ai="Gemini">Gemini <span class="ai-badge" id="countGemini">0</span></div>
+        </div>
+    </div>
 </header>
 
 <main>
-  <section id="section-create" class="section active">
-    <div class="card">
-      <div class="card-title">Neuen Prompt erstellen</div>
-      <form id="promptForm">
-        <label>KI-Modell</label>
-        <select id="promptAI" required>
-          <option value="">Auswählen…</option>
-          <option>ChatGPT</option>
-          <option>Claude.AI</option>
-          <option>DeepSeek</option>
-          <option>Perplexity</option>
-          <option>Gemini</option>
-        </select>
+    <section id="section-create" class="section active">
+        <div class="card">
+            <div class="card-title">Neuen Prompt erstellen</div>
+            <form id="promptForm">
+                <label>KI-Modell</label>
+                <select id="promptAI" required>
+                    <option value="">Auswählen…</option>
+                    <option>ChatGPT</option>
+                    <option>Claude.AI</option>
+                    <option>DeepSeek</option>
+                    <option>Perplexity</option>
+                    <option>Gemini</option>
+                </select>
 
-        <label>Titel</label>
-        <input type="text" id="promptTitle" placeholder="Titel des Prompts" required />
+                <label>Titel</label>
+                <input type="text" id="promptTitle" placeholder="Titel des Prompts" required/>
 
-        <label>Kategorie</label>
-        <select id="promptCategory" required>
-          <option value="">Auswählen…</option>
-          <option>Schreiben</option>
-          <option>Coding</option>
-          <option>Analyse</option>
-          <option>Kreativ</option>
-          <option>Business</option>
-          <option>Sonstiges</option>
-        </select>
+                <label>Kategorie</label>
+                <select id="promptCategory" required>
+                    <option value="">Auswählen…</option>
+                    <option>Schreiben</option>
+                    <option>Coding</option>
+                    <option>Analyse</option>
+                    <option>Kreativ</option>
+                    <option>Business</option>
+                    <option>Sonstiges</option>
+                </select>
 
-        <label>Prompt-Text</label>
-        <textarea id="promptText" rows="6" placeholder="Hier deinen Prompt eingeben…" required></textarea>
+                <label>Prompt-Text</label>
+                <textarea id="promptText" rows="6" placeholder="Hier deinen Prompt eingeben…" required></textarea>
 
-        <button type="submit" class="btn-primary">Speichern</button>
-      </form>
-    </div>
-  </section>
+                <button type="submit" class="btn-primary">Speichern</button>
+            </form>
+        </div>
+    </section>
 
-  <section id="section-list" class="section">
-    <div class="card">
-      <div class="card-title">Gespeicherte Prompts</div>
-      <div id="filterInfo" class="filter-bar">
-        <span>Filter: <strong id="filterName">Alle</strong></span>
-        <button class="btn-clear" id="clearFilter">entfernen</button>
-      </div>
-      <div id="promptsList"></div>
-    </div>
-  </section>
+    <section id="section-list" class="section">
+        <div class="card">
+            <div class="card-title">Gespeicherte Prompts</div>
+            <div id="filterInfo" class="filter-bar">
+                <span>Filter: <strong id="filterName">Alle</strong></span>
+                <button class="btn-clear" id="clearFilter">entfernen</button>
+            </div>
+            <div id="promptsList"></div>
+        </div>
+    </section>
 </main>
 
 <script src="script.js" defer></script>

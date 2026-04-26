@@ -28,25 +28,25 @@ document.addEventListener("DOMContentLoaded", () => {
     async function savePrompt(prompt) {
         await fetch(API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify(prompt),
         });
         loadPrompts();
     }
 
     async function deletePromptBackend(id) {
-        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        await fetch(`${API_URL}/${id}`, {method: "DELETE"});
         loadPrompts();
     }
 
     // ── DOM refs ──
-    const hamburgerBtn  = document.getElementById("hamburgerBtn");
-    const menuDropdown  = document.getElementById("menuDropdown");
+    const hamburgerBtn = document.getElementById("hamburgerBtn");
+    const menuDropdown = document.getElementById("menuDropdown");
     const createSection = document.getElementById("section-create");
-    const listSection   = document.getElementById("section-list");
-    const form          = document.getElementById("promptForm");
-    const promptsList   = document.getElementById("promptsList");
-    const filterInfo    = document.getElementById("filterInfo");
+    const listSection = document.getElementById("section-list");
+    const form = document.getElementById("promptForm");
+    const promptsList = document.getElementById("promptsList");
+    const filterInfo = document.getElementById("filterInfo");
 
     hamburgerBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -94,10 +94,10 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", (e) => {
         e.preventDefault();
         savePrompt({
-            title:    document.getElementById("promptTitle").value,
+            title: document.getElementById("promptTitle").value,
             category: document.getElementById("promptCategory").value,
-            text:     document.getElementById("promptText").value,
-            aiModel:  document.getElementById("promptAI").value,
+            text: document.getElementById("promptText").value,
+            aiModel: document.getElementById("promptAI").value,
         });
         form.reset();
         showToast("✓ Prompt gespeichert");
