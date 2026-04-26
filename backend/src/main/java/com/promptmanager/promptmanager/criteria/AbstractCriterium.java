@@ -20,4 +20,6 @@ public abstract class AbstractCriterium implements Criterion {
         if (max <= 0) return 0;
         return Math.max(0, Math.min(value, max));
     }
+
+    public abstract int evaluate(String text);
 }
