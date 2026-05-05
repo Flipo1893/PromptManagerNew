@@ -1,66 +1,138 @@
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+package com.promptmanager.promptmanager.service;
+
+import com.promptmanager.promptmanager.analyzer.PromptAnalyzer;
+import com.promptmanager.promptmanager.entity.Prompt;
+import com.promptmanager.promptmanager.repository.PromptRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PromptServiceTest {
+class PromptServiceTest {
 
     @Mock
-    private PromptRepository promptRepository;
-    
+    private PromptRepository repo;
+
     @Mock
-    private PromptAnalyzer promptAnalyzer;
-    
+    private PromptAnalyzer analyzer;
+
     @InjectMocks
-    private PromptService promptService;
+    private PromptService service;
 
     private Prompt prompt;
 
     @BeforeEach
-    public void setUp() {
-        prompt = new Prompt(); // Assume there is a no-arg constructor
+    void setUp() {
+        prompt = new Prompt();
         prompt.setId(1L);
-        prompt.setModel("TestModel");
+        prompt.setAiModel("GPT-4");
+        prompt.setTitle("Test Prompt");
+        prompt.setText("Du bist ein erfahrener Entwickler. Erkläre mir Java.");
     }
 
     @Test
-    public void testSave() {
-        when(promptRepository.save(any(Prompt.class))).thenReturn(prompt);
-        Prompt savedPrompt = promptService.save(prompt);
-        verify(promptRepository, times(1)).save(prompt);
-        assertEquals(prompt, savedPrompt);
+    void save_setsScoreFromAnalyzerAndSavesToRepo() {
+        when(analyzer.analyze(prompt)).thenReturn(42);
+        when(repo.save(prompt)).thenReturn(prompt);
+
+        Prompt result = service.save(prompt);
+
+        verify(analyzer).analyze(prompt);
+        verify(repo).save(prompt);
+        assertEquals(42, result.getScore());
+        assertSame(prompt, result);
     }
 
     @Test
-    public void testGetAll() {
-        when(promptRepository.findAll()).thenReturn(Arrays.asList(prompt));
-        List<Prompt> allPrompts = promptService.getAll();
-        verify(promptRepository, times(1)).findAll();
-        assertEquals(1, allPrompts.size());
-        assertEquals(prompt, allPrompts.get(0));
+    void save_analyzerReturnsZero_setsScoreToZero() {
+        when(analyzer.analyze(prompt)).thenReturn(0);
+        when(repo.save(prompt)).thenReturn(prompt);
+
+        Prompt result = service.save(prompt);
+
+        assertEquals(0, result.getScore());
     }
 
     @Test
-    public void testGetByModel() {
-        when(promptRepository.findByModel("TestModel")).thenReturn(Arrays.asList(prompt));
-        List<Prompt> promptsByModel = promptService.getByModel("TestModel");
-        verify(promptRepository, times(1)).findByModel("TestModel");
-        assertEquals(1, promptsByModel.size());
-        assertEquals(prompt, promptsByModel.get(0));
+    void save_analyzerReturnsMaxScore_setsCorrectScore() {
+        when(analyzer.analyze(prompt)).thenReturn(80);
+        when(repo.save(prompt)).thenReturn(prompt);
+
+        Prompt result = service.save(prompt);
+
+        assertEquals(80, result.getScore());
     }
 
     @Test
-    public void testDelete() {
-        doNothing().when(promptRepository).deleteById(1L);
-        promptService.delete(1L);
-        verify(promptRepository, times(1)).deleteById(1L);
+    void getAll_returnsAllPrompts() {
+        Prompt second = new Prompt();
+        second.setId(2L);
+        List<Prompt> expected = Arrays.asList(prompt, second);
+        when(repo.findAll()).thenReturn(expected);
+
+        List<Prompt> result = service.getAll();
+
+        verify(repo).findAll();
+        assertEquals(2, result.size());
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void getAll_emptyRepo_returnsEmptyList() {
+        when(repo.findAll()).thenReturn(Collections.emptyList());
+
+        List<Prompt> result = service.getAll();
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getByModel_returnsMatchingPrompts() {
+        List<Prompt> expected = List.of(prompt);
+        when(repo.findByAiModel("GPT-4")).thenReturn(expected);
+
+        List<Prompt> result = service.getByModel("GPT-4");
+
+        verify(repo).findByAiModel("GPT-4");
+        assertEquals(1, result.size());
+        assertSame(prompt, result.get(0));
+    }
+
+    @Test
+    void getByModel_noMatch_returnsEmptyList() {
+        when(repo.findByAiModel("unknown-model")).thenReturn(Collections.emptyList());
+
+        List<Prompt> result = service.getByModel("unknown-model");
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void delete_callsDeleteByIdOnRepo() {
+        doNothing().when(repo).deleteById(1L);
+
+        service.delete(1L);
+
+        verify(repo).deleteById(1L);
+    }
+
+    @Test
+    void delete_differentId_passesCorrectId() {
+        doNothing().when(repo).deleteById(99L);
+
+        service.delete(99L);
+
+        verify(repo).deleteById(99L);
+        verify(repo, never()).deleteById(1L);
     }
 }
