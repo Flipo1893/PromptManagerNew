@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -70,8 +71,24 @@ public class PromptServiceTest {
 
     @Test
     public void testDelete() {
+        when(promptRepository.existsById(1L)).thenReturn(true);
         doNothing().when(promptRepository).deleteById(1L);
+
         promptService.delete(1L);
+
         verify(promptRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    public void testDeleteNonExisting() {
+        when(promptRepository.existsById(99999L)).thenReturn(false);
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> promptService.delete(99999L)
+        );
+
+        assertEquals(404, ex.getStatusCode().value());
+        verify(promptRepository, never()).deleteById(anyLong());
     }
 }
