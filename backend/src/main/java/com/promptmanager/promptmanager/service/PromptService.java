@@ -3,7 +3,9 @@ package com.promptmanager.promptmanager.service;
 import com.promptmanager.promptmanager.analyzer.PromptAnalyzer;
 import com.promptmanager.promptmanager.entity.Prompt;
 import com.promptmanager.promptmanager.repository.PromptRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -33,6 +35,9 @@ public class PromptService {
     }
 
     public void delete(Long id) {
+        if (!repo.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Prompt nicht gefunden");
+        }
         repo.deleteById(id);
     }
 }
